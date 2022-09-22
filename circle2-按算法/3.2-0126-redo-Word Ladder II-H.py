@@ -104,3 +104,36 @@ class Solution:
                         queue.append((path + [new_word], step+1))
     
         return [path for path, step in res if step == shortest]
+
+'''
+超时
+idea：
+每一轮把同样的step都弄完，因为同一step的word只不能出现在之前的visited里，所以同一轮要单设一个visited
+while的时候跳出循环要多设一个，如果有res就 跳出。    
+'''
+from collections import deque
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+        wordSet = set(wordList)
+        if endWord not in wordSet:
+            return []
+        letters = ''.join(set(list(''.join(wordList))))
+        queue = deque([[beginWord]])
+        visited = set([beginWord])
+        res = []
+        while queue and not res:
+            lens = len(queue)
+            localVisited = set()
+            for _ in range(lens):
+                path = queue.popleft()
+                word = path[-1]
+                for i in range(len(word)):
+                    for w in letters:
+                        newWord = word[:i] + w + word[i+1:]
+                        if newWord == endWord:
+                            res.append(path+[newWord])
+                        if newWord in wordSet and newWord not in visited:
+                            queue.append(path+[newWord])
+                            localVisited.add(newWord)
+            visited = visited.union(localVisited)
+        return res

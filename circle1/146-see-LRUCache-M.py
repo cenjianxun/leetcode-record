@@ -144,61 +144,56 @@ class LRUCache:
 
 
 
-class Node:
+class LinkNode:
     def __init__(self, val=None):
         self.val = val
-        self.next = None
         self.pre = None
+        self.next = None
 
 class LRUCache:
 
-    def __init__(self, capacity: int): 
-        self.dic = {}
-        self.head = Node(val=capacity)
-        self.tail = Node(val=0)
+    def __init__(self, capacity: int):
+        self.dict = {}
+        self.head = LinkNode(capacity)
+        self.tail = LinkNode(0)
         self.head.next = self.tail
-        self.tail.pre = self.head
+        self.tail.pre = self.head 
         
     def get(self, key: int) -> int:
-        if key not in self.dic:
+        if key not in self.dict:
             return -1
-        node = self.dic[key]
-        # print(key)
-        # pdic(self.dic)
+        node = self.dict[key]
         if node.val != -1:
             self.del_node(node)
-            self.add_node(self.head, node)
+            self.add_node(node)
         return node.val
-
+            
+    
     def put(self, key: int, value: int) -> None:
-        if key in self.dic and self.dic[key].val != -1:   
-            node = self.dic[key]
-            node.val = value
-            self.del_node(node)
-            self.add_node(self.head, node)
-        else:
-            if key in self.dic:
-                node = self.dic[key]
-                node.val = value
+        if key in self.dict:
+            node = self.dict[key]
+            if node.val != -1:
+                self.del_node(node)
             else:
-                node = Node(value)
-                self.dic[key] = node     
-            self.add_node(self.head, node)
+                self.tail.val += 1
+            node.val = value
+        else:
+            node = LinkNode(value)
+            self.dict[key] = node
             self.tail.val += 1
-            if self.tail.val > self.head.val:
-                self.tail.pre.val = -1
-                self.del_node(self.tail.pre)
-                self.tail.val -= 1
-        # print((key, value))
-        # pnode(self.head)
-        # pdic(self.dic)
-
-    def add_node(self, p, node):
-        node.next = p.next
-        node.next.pre = node
-        node.pre = p
-        p.next = node
+        self.add_node(node)
+        if self.tail.val > self.head.val:
+            self.tail.pre.val = -1
+            self.del_node(self.tail.pre)
+            self.tail.val -= 1
+ 
         
+    def add_node(self, node):
+        self.head.next.pre = node
+        node.next = self.head.next
+        node.pre = self.head
+        self.head.next = node
+    
     def del_node(self, node):
         node.pre.next = node.next
         node.next.pre = node.pre

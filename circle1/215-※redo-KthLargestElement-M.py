@@ -41,12 +41,12 @@ def findKthLargest(self, nums: List[int], k: int) -> int:
         shift_down(nums, i, len(nums) - 1)
     
     '''
-    至此为止只完成了父子节点直接的大小排序，对于本节点的子们和邻节点的子们之间的大小覆盖不到.
+    至此为止只完成了父子节点直接的大小排序，是大顶堆，即部分降序。对于本节点的子们和邻节点的子们之间的大小覆盖不到.
     例子[3,2,3,1,2,4,5,5,6]，到这里会变成[6, 5, 5, 3, 2, 4, 3, 2, 1]
     所以还需要下面的：
     '''
 
-    # 这里循环的意思是，倒叙，逐个把最大的最顶的值和最后一个值交换，最后一个值就最大了就定了，然后再用余下的数组再调用换大顶函数一次，从0开始只一次，保证调用完之后根是剩下这些里面最大的。循环。
+    # 这里循环的意思是，倒叙，逐个把最大的最顶的值和最后一个值交换，最后一个值就最大了就定了（完全排完序之后是一个升序数组，最后一个值最大），然后再用余下的数组再调用换大顶函数一次，从0开始只一次，保证调用完之后根是剩下这些里面最大的。循环。
     for i in range(len(nums)-1, 0, -1):
         nums[i], nums[0] = nums[0], nums[i]
         shift_down(nums, 0, i - 1)
@@ -60,5 +60,51 @@ def findKthLargest(self, nums: List[int], k: int) -> int:
 堆方法：
 '''
 def findKthLargest(self, nums: List[int], k: int) -> int:
-    heapq.heapify(nums)
+    #heapq.heapify(nums)
     return heapq.nlargest(k, nums)[-1]
+
+
+'''
+快排法
+'''
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        pos = self.partition(nums, 0, len(nums) - 1)
+        if pos > len(nums) - k:
+            return self.findKthLargest(nums[:pos], k-(len(nums)-pos))
+        elif pos < len(nums) - k:
+            return self.findKthLargest(nums[pos+1:], k)
+        else:
+            return nums[pos]
+        return  
+    
+    def partition(self, nums, low, high):
+        i = low
+        while low < high:
+            if nums[low] < nums[high]:
+                nums[i], nums[low] = nums[low], nums[i]
+                i += 1
+            low += 1
+        nums[i], nums[high] = nums[high], nums[i]
+ 
+        return i
+
+'''
+用heapq
+'''
+import heapq
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        heap = []
+        for n in nums:
+            heapq.heappush(heap, n)
+ 
+        for _ in range(len(nums) - k):
+            heapq.heappop(heap)
+        return heapq.heappop(heap)
+
+    def findKthLargest(self, nums: List[int], k: int) -> int:
+        heapq.heapify(nums)
+        for _ in range(len(nums) - k):
+            heapq.heappop(nums)
+        return heapq.heappop(nums)
