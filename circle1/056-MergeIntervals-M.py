@@ -25,3 +25,19 @@ def merge(intervals: List[List[int]]) -> List[List[int]]:
         i = i + 1
     result.append(temp)
     return result
+
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        intervals.sort(key=lambda x:x[0])
+        res = []
+        left, right = intervals[0]
+        for start, end in intervals[1:]:
+            if right < start:
+                res.append((left, right))
+                left, right = start, end
+            else:
+                left = min(left, start)
+                right = max(right, end)
+        res.append((left, right))
+        return res

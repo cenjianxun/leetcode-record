@@ -28,17 +28,22 @@ BST 二叉搜索树：
   → 看下左子树和右子树需要处理的步骤是不是相同，如果相同用一个就好了
 
  
+🟡 自顶向下和自底向上
+	
+	区别就是，自顶向下类似前序遍历，自底向上类似后序遍历。
+	
 
 95 94 96 226 104 108 617 107 543 114 105 101 687 654 655 449 199 257 102 144 669 538 124 112 145 501 100 530 222 111 637 437 173 337 653 404 110 776 99 863 103 563 684 235 515 297 236 513 606 652 113 106 508 230 129 662 783 98 572 671 450 250 685 623 116 998 255 333 1008 117 988 270 549 582 156 285 272 666 366 536 545 298 331
 
+二叉搜索
+4 349 167 287 300 718 33 410 363 315 327 29 50 69 174 475 35 378 222 209 352 668 374 454 34 153 493 392 
+
 字典树：676
 
-———————————————— NO.5  图 ———————————————— 
-419？ 54 750
+———————————————— NO.4  图 ———————————————— 
 
-对角线上的点(x, y)满足一个性质：x + y == i
 
-https://bbs.huaweicloud.com/blogs/342362
+
 
 如果图包含环，需要visited数组做辅助。visited数组的操作很像回溯算法做「做选择」和「撤销选择」，区别在于位置，回溯算法的「做选择」和「撤销选择」在for循环里面，而对visited数组的操作在for 循环外面。
 为什么回溯算法框架会用后者？因为回溯算法关注的不是节点，而是树枝，不信你看 回溯算法核心套路 里面的图，它可以忽略根节点。
@@ -46,33 +51,63 @@ https://bbs.huaweicloud.com/blogs/342362
 显然，对于这里「图」的遍历，我们应该把visited的操作放到 for 循环外面，否则会漏掉起始点的遍历。
 
 当然，当有向图含有环的时候才需要visited数组辅助，如果不含环，连visited数组都省了，基本就是多叉树的遍历。
-'''
-图的遍历结构：
-# 如果是无环图，就没有visited那两行
-def traverse(graph, point):
-	if visited[point]:
-		return
-	visited[point] = True
-	for (TreeNode neighbor : graph.neighbors(s)):
-		traverse(neighbor)
-	visited[point] = False
-'''
+ 
+🟡 图的遍历结构：
+	# 如果是无环图，就没有visited那两行
+	visited = {}
+	def dfs(graph, point):
+		if visited[point]:
+			return
+		visited[point] = True
+		for neighbor in graph.neighbors(s):
+			dfs(neighbor)
+		visited[point] = False
 
-拓扑排序：
-就是先来的先完成才能完成后来的（选课）
-拓扑排序的基础是后序遍历。
-后序遍历的这一特点很重要，之所以拓扑排序的基础是后序遍历，是因为一个任务必须在等到所有的依赖任务都完成之后才能开始开始执行。
+	def bfs(graph, point):
+		queue = deque(point)
+		while queue:
+			n = queue.popleft()
+			for neighbor in graph.neighbors(n):
+				if neighbor not in visited:
+					visited[neighbor] = True
+				queue.append(neighbor)
+ 
 
-有向环需要三个点标记的原因：
-因为第二次遇到同一个点有两种情况：
-1.它结束了（合法到结尾但不是环，when a和b都指向c的时候）
-2.成环了
-所以需要不同的id区别这两种情况
-https://cs.stackexchange.com/questions/9676/the-purpose-of-grey-node-in-graph-depth-first-search
+💥 拓扑：
+	拓扑排序的基础是后序遍历。
+	后序遍历的这一特点很重要，之所以拓扑排序的基础是后序遍历，是因为一个任务必须在等到所有的依赖任务都完成之后才能开始开始执行。
+	🔸 决定nodes先后顺序（关系） （210. Course Schedule II， 269. Alien Dictionary）
 
-https://bbs.huaweicloud.com/blogs/342362
 
-399 207 133 332 684 310 210 685 269 444 323 261
+	🔸 判断有向图是否有cycle （207. Course Schedule）
+		就是先来的先完成才能完成后来的（选课）：207 210 630 1462
+
+		207:
+			bfs:计算入度
+			dfs:用三种值标记节点的种类
+
+				有向环需要三个点标记的原因：
+				因为第二次遇到同一个点有两种情况：
+				1.它结束了（合法到结尾但不是环，when a和b都指向c的时候）
+				2.成环了
+				所以需要不同的id区别这两种情况
+				https://cs.stackexchange.com/questions/9676/the-purpose-of-grey-node-in-graph-depth-first-search
+		210：
+			和207的区别是要返回课程方案
+
+  	🔸 判断无向图是否有cycle 
+
+
+
+	🔸 图二分染色（785. Is Graph Bipartite?
+
+💥 tarjan算法 （1192. Critical Connections in a Network）
+
+
+207 133【基础】 332 310 210  {269} {444} {323} {261} 1192 785
+ 
+没做： 332（等会做）
+
 ————————————————————————————————————————————————————————————————————————————————————————————————
 
 

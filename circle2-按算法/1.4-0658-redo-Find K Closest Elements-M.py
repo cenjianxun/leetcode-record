@@ -29,7 +29,7 @@ Constraints:
 '''
 考虑成（减去k后的绝对值）区间左右两侧端点哪个离0更近
 
-注意hi的值是 len-k 而不是len-k-1
+注意hi的值是 len-k 而不是len-k-1，因为hi值是左边界的右边界，即，左边界可取值从[lo, hi]
 '''
 class Solution:
     def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
