@@ -10,12 +10,12 @@ Ex: vv, xbbx, bbccdd, xyffyxdd are all valid.
 def ValidCoupon(coupon):
   let stack=[];
   for i in range(len(coupon)):
-    if stack.length==0 or coupon[i]!=stack[stack.length-1]:
+    if stack.length==0 or coupon[i]!=stack[len(stack)-1]:
       stack.append(coupon[i]) 
     else:
       stack.pop()
   
-  if stack.length == 0:
+  if not stack:
     return 1
  
   return 0 
