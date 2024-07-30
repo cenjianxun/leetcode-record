@@ -76,15 +76,19 @@ set1.pop() # 随机删除一个
 
 
 # —————————— list ———————————
+# 遍历index value
+enumerate(alist)
+
 # 增删
 alist.append() O(1)
 alist.insert(index, value) O(n)
 alist.pop(index) O(n)
 alist.remove(value) O(n)
 
-#list的index：
-alist.index(astr) 返回alsit里【第一个】astr的序列号
+#list的index：返回alsit里【第一个】astr的序列号
+alist.index(astr) O(n)
 
+in alist 的时间复杂度是 O(n)
 
 # 队列
 from collections import deque

@@ -43,13 +43,13 @@ hashmap：
 http://micili.cn/2017/09/25/Leetcode%E6%80%BB%E7%BB%93-%E4%BA%8C/
 406 283 75 15 259 42 407 443 532 640 3 680 481 487 264 313 522 360 524 159 340 287 838 243 244 245 675 1229 1099
 
-🛑两个指针的使用方法：
+🛑 两个指针的使用方法：
 	1. 固定一个端点对另一个进行二分
 	2. 双指针。双指针有两种
 		a. 滑动窗口
 		b. 对撞指针
 
-🟡最小滑窗模板：76, 438, 209,
+🟡 最小滑窗模板：76, 438, 209,
 给定数组 nums，定义滑窗的左右边界 i, j，求满足某个条件的滑窗的最小长度。
 
 while j < len(nums):
@@ -60,7 +60,7 @@ while j < len(nums):
     j += 1
 
 
-🟡最大滑窗模板：904，1004，3
+🟡 最大滑窗模板：904，1004，3
 给定数组 nums，定义滑窗的左右边界 i, j，求满足某个条件的滑窗的最大长度。
 
 while j < len(nums):
@@ -75,7 +75,7 @@ while j < len(nums):
 如果滑动窗口长度不变，比较里面char的频次，可以直接比较map：567
 
 
-👉👉👉滑动窗口进化
+👉👉👉 滑动窗口进化
 
 https://leetcode.cn/problems/max-consecutive-ones-iii/solution/jidao-by-iamysw-bs2s/
 
@@ -85,7 +85,7 @@ https://leetcode.cn/problems/max-consecutive-ones-iii/solution/jidao-by-iamysw-b
 	哈希表或有序集合。这个过程可以看出如果当前窗口不满足要求则左端口和右端口同时向前移动，
 	且窗口大小保持不变，如果后续遇到了能满足要求的更大的窗口则左端口就停止移动，
 	最后得到的窗口大小即是满足题目要求最大的窗口大小。
-	🟡模板：
+	🟡 模板：
 	while r < len(nums):
     	判断[l, r]是否满足条件
 	    if 不满足条件：
@@ -105,6 +105,30 @@ https://leetcode.cn/problems/max-consecutive-ones-iii/solution/jidao-by-iamysw-b
 	② 把标记的count改成dic，随滑动随更新最终结果值（LC424、LC904）
 
 	另外，在判断不满足条件之前update最新结果值可能更好理解一点。
+
+# - - - - - - - - - - - - - - - - - - - 
+🟡 双指针截半，找target：374
+
+	模板通常是：
+	left, right = 0, n
+	while left < right:
+		mid = (left + right) // 2
+		if target > mid:
+			left = mid + 1
+		elif target <= mid:
+			right = mid
+	return left
+
+	这里面有几个定式：
+	① 为什么是left为mid+1而right直接是mid：
+		因为mid在取整的时候是向下取整，mid有可能=left，而不会在未找到时=right。所以要多往上推一下。
+		比如[1,2]取mid为1，left直接=1的话将永不能挪动。
+
+	② 为什么=mid命中的情况是和right合并
+		因为①，所以left挪的多，已经命中了再挪开就过多了。
+
+	③为什么return的是left：
+		所有退出循环的情况都是left=right=target，所以return谁都一样。
 
 
 ———————————————— NO.3 前缀和/区间和 ————————————————
